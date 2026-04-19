@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart | Build-A-Keyboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Build-A-Keyboard</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="builder.html">Builder</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="login.html" id="nav-login-btn">Login</a></li>
+        </ul>
+        <div class="cart-icon">
+            <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+        </div>
+    </nav>
+
+    <div class="cart-container">
+        <h2>Your Shopping Cart</h2>
+        
+        <div id="cart-items-container">
+            <p>Loading cart...</p>
+        </div>
+
+        <div class="cart-summary" id="cart-summary" style="display: none;">
+            <hr style="border-color: #333; margin: 20px 0;">
+            <h3>Subtotal: <span id="cart-subtotal">RM 0</span></h3>
+            <p>Shipping calculated at checkout.</p>
+            <br><br>
+            <a href="checkout.html" class="btn btn-primary">Proceed to Checkout</a>
+        </div>
+    </div>
+
+    <div class="disclaimer-banner">
+        ⚠️ <strong>Disclaimer:</strong> This website is a prototype developed for educational purposes only. No real transactions will occur.
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

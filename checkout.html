@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Build-A-Keyboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Build-A-Keyboard</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="builder.html">Builder</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="login.html" id="nav-login-btn">Login</a></li>
+        </ul>
+        <div class="cart-icon">
+            <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        
+        <div class="checkout-form-section">
+            <h2>Shipping Details</h2>
+            <form id="checkout-form" class="auth-form">
+                
+                <div class="form-row">
+                    <input type="text" placeholder="First Name" required>
+                    <input type="text" placeholder="Last Name" required>
+                </div>
+                <input type="email" placeholder="Email Address" required>
+                <input type="text" placeholder="Full Shipping Address" required>
+                <div class="form-row">
+                    <input type="text" placeholder="City" required>
+                    <input type="text" placeholder="Postcode" required>
+                </div>
+
+                <h2 style="margin-top: 30px;">Payment Method</h2>
+                <div class="payment-options">
+                    <div class="radio-toggle-group">
+                        <input type="radio" name="payment-method" id="pay-card" value="card" checked>
+                        <label for="pay-card" class="toggle-btn">Credit / Debit Card</label>
+                        
+                        <input type="radio" name="payment-method" id="pay-fpx" value="fpx">
+                        <label for="pay-fpx" class="toggle-btn">Online Banking (FPX)</label>
+                        
+                        <input type="radio" name="payment-method" id="pay-ewallet" value="ewallet">
+                        <label for="pay-ewallet" class="toggle-btn">e-Wallet</label>
+                    </div>
+                </div>
+
+                <div id="card-details" style="margin-top: 15px;">
+                    <input type="text" placeholder="Card Number (0000 0000 0000 0000)">
+                    <div class="form-row" style="margin-top: 15px;">
+                        <input type="text" placeholder="MM/YY">
+                        <input type="text" placeholder="CVV">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 30px; width: 100%; font-size: 1.2rem;">Confirm Purchase</button>
+            </form>
+        </div>
+
+        <div class="checkout-summary-section">
+            <h2>Order Summary</h2>
+            <div id="checkout-items-container" class="checkout-items">
+                <p>Loading summary...</p>
+            </div>
+            <hr style="border-color: #333; margin: 20px 0;">
+            <div class="checkout-totals">
+                <p>Subtotal: <span id="checkout-subtotal">RM 0</span></p>
+                <p>Shipping: <span style="color: #4CAF50;">Free (Promo)</span></p>
+                <h3 style="margin-top: 15px;">Grand Total: <span id="checkout-grand-total">RM 0</span></h3>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="disclaimer-banner">
+        ⚠️ <strong>Disclaimer:</strong> This website is a prototype developed for educational purposes only. No real transactions will occur.
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

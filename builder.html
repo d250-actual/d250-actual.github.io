@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Builder | Build-A-Keyboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Build-A-Keyboard</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="builder.html">Builder</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="login.html" id="nav-login-btn">Login</a></li>
+        </ul>
+        <div class="cart-icon">
+            <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+        </div>
+    </nav>
+
+    <div class="builder-container">
+        
+
+        <div class="builder-options">
+            <h2>Configure Your Build</h2>
+            
+            <div class="option-group">
+                <label for="layout-select">1. Choose Layout (Base Price)</label>
+                <select id="layout-select" class="build-select">
+                    <option value="400" data-name="65% Compact">65% Compact - RM 400</option>
+                    <option value="500" data-name="75% Tenkeyless">75% Tenkeyless - RM 500</option>
+                    <option value="600" data-name="100% Full Size">100% Full Size - RM 600</option>
+                </select>
+            </div>
+
+            <div class="option-group">
+                <label for="switch-select">2. Choose Switches</label>
+                <select id="switch-select" class="build-select">
+                    <option value="0" data-name="Linear Red">Linear Red (Smooth & Quiet) - +RM 0</option>
+                    <option value="50" data-name="Tactile Brown">Tactile Brown (Bump feel) - +RM 50</option>
+                    <option value="80" data-name="Premium Lubed Linear">Premium Lubed Linear - +RM 80</option>
+                </select>
+            </div>
+
+            <div class="option-group">
+                <label>3. Customize Individual Keycaps</label>
+                <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;">Click keys on the board to select them, choose a style below, and click "Apply".</p>
+                
+                <div id="visual-keyboard" class="visual-keyboard"></div>
+
+                <div class="styling-panel">
+                    <h4>Paint Selected Keys</h4>
+                    <div style="display: flex; gap: 10px; margin-top: 10px; align-items: center;">
+                        <select id="keycap-style-select" class="build-select" style="flex: 2;">
+                            <optgroup label="--- Designer Sets ---">
+                                <option value="1" data-name="Midnight Black ABS">Midnight Black ABS (+RM 1/key)</option>
+                                <option value="2" data-name="Translucent Crystal ABS">Translucent Crystal ABS (+RM 2/key)</option>
+                                <option value="2" data-name="Vintage Typewriter Round">Vintage Typewriter Round (+RM 2/key)</option>
+                                <option value="3" data-name="Retro Grey PBT">Retro Grey PBT (+RM 3/key)</option>
+                                <option value="3" data-name="Pastel Matcha PBT">Pastel Matcha PBT (+RM 3/key)</option>
+                                <option value="4" data-name="Deep Ocean Blue Double-shot">Deep Ocean Blue Double-shot (+RM 4/key)</option>
+                                <option value="5" data-name="Minimalist White POM">Minimalist White POM (+RM 5/key)</option>
+                                <option value="6" data-name="Neon Cyberpunk PBT">Neon Cyberpunk PBT (+RM 6/key)</option>
+                                <option value="10" data-name="Premium Ceramic">Premium Ceramic (+RM 10/key)</option>
+                            </optgroup>
+                            <optgroup label="--- Custom Colors ---">
+                                <option value="3" data-name="Custom Solid Color" class="highlight-option">🎨 Custom Solid Color (+RM 3/key)</option>
+                                <option value="4" data-name="Custom Gradient Color" class="highlight-option">🌈 Custom Gradient Color (+RM 4/key)</option>
+                            </optgroup>
+                        </select>
+                        
+                        <div id="color-inputs" style="display: none; gap: 5px;">
+                            <input type="color" id="custom-color-1" value="#ff4444" style="height: 44px; width: 40px; cursor: pointer; padding: 0; border: none;">
+                            <input type="color" id="custom-color-2" value="#4444ff" style="display: none; height: 44px; width: 40px; cursor: pointer; padding: 0; border: none;">
+                        </div>
+
+                        <button id="apply-style-btn" class="btn btn-secondary" style="margin: 0; flex: 1;">Apply</button>
+                    </div>
+                    <button id="select-all-btn" class="btn btn-secondary" style="margin: 10px 0 0 0; width: 100%; font-size: 0.9rem; padding: 8px;">Select All Keys</button>
+                </div>
+            </div>
+
+            <div class="price-summary">
+                <h3>Total Price: <span id="total-price">RM 500</span></h3>
+            </div>
+
+            <button id="add-to-cart-btn" class="btn btn-primary" style="width: 100%;">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="disclaimer-banner">
+        ⚠️ <strong>Disclaimer:</strong> This website is a prototype developed for educational purposes only. No real transactions will occur.
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

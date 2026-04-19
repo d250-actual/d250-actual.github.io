@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Build-A-Keyboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .auth-form input {
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+        }
+        .toggle-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .toggle-link a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Build-A-Keyboard</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="builder.html">Builder</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="login.html" id="nav-login-btn">Login</a></li>
+        </ul>
+        <div class="cart-icon">
+            <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        
+        <div id="login-section">
+            <h2>Log In</h2><br>
+            <form class="auth-form" id="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <br><button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <div class="toggle-link">
+                <a href="#" id="show-signup">Create Account?</a>
+            </div>
+        </div>
+
+        <div id="signup-section" style="display: none;">
+            <h2>Create Account</h2><br>
+            <form class="auth-form" id="signup-form">
+                <input type="email" id="signup-email" placeholder="Email" required>
+                <input type="password" id="signup-password" placeholder="Password" required>
+                <br><button type="submit" class="btn btn-secondary">Sign Up</button>
+            </form>
+            <div class="toggle-link">
+                <a href="#" id="show-login">Already have an account? Log In</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="disclaimer-banner">
+        ⚠️ <strong>Disclaimer:</strong> This website is a prototype developed for educational purposes only. No real transactions will occur.
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
