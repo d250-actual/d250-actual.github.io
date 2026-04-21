@@ -33,27 +33,6 @@ function updateCartCount() {
     cartCountSpan.innerText = totalItems;
 }
 
-// (Helper Function for Later) - You will use this on your builder.html page
-function addToCart(productName, price) {
-    let cart = JSON.parse(localStorage.getItem('myCart')) || [];
-    
-    // Create the product object
-    let newItem = {
-        name: productName,
-        price: price,
-        qty: 1
-    };
-    
-    // Add to array and save back to local storage
-    cart.push(newItem);
-    localStorage.setItem('myCart', JSON.stringify(cart));
-    
-    // Update the visual counter
-    updateCartCount();
-    
-    alert(productName + " added to cart!");
-}
-
 // --- AUTHENTICATION LOGIC ---
 
 // Form Toggling Elements
