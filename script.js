@@ -279,6 +279,18 @@ if(addToCartBtn) {
 }
 
 // 3. Apply Style to Selected Keys
+// Handle Select All Button
+if (selectAllBtn) {
+    selectAllBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // Stop the page from jumping to the top
+        
+        // Loop through all currently rendered keys and apply the green highlight
+        allKeysData.forEach(k => {
+            k.element.classList.add('selected');
+        });
+    });
+}
+
 if (applyStyleBtn) {
     applyStyleBtn.addEventListener('click', (e) => {
         e.preventDefault();
