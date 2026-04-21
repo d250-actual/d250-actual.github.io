@@ -1,31 +1,35 @@
+// --- NEW: Dynamic Cart Key Helper ---
+function getCartKey() {
+    let currentUser = localStorage.getItem('currentUser');
+    // If they are logged in, use their specific email as the cart name.
+    // If they are a guest, use a temporary 'guestCart'.
+    return currentUser ? 'cart_' + currentUser : 'guestCart';
+}
+
 // This function runs automatically when the page loads
 document.addEventListener("DOMContentLoaded", () => {
     updateCartCount();
 });
 
-// Function to update the number shown in the navigation bar
+// 1. Function to update the number shown in the navigation bar
 function updateCartCount() {
     let cartCountSpan = document.getElementById('cart-count');
-    if (!cartCountSpan) return; // Safety check
+    if (!cartCountSpan) return; 
 
     let currentUser = localStorage.getItem('currentUser');
-    
-    // If no user is logged in, force the cart to show 0
     if (!currentUser) {
         cartCountSpan.innerText = "0";
         return;
     }
 
-    // 1. Get the cart array from local storage
-    let cart = JSON.parse(localStorage.getItem('myCart')) || [];
+    let currentCartKey = getCartKey(); 
+    let cart = JSON.parse(localStorage.getItem(currentCartKey)) || [];
     
-    // 2. Find the total number of items
     let totalItems = 0;
     cart.forEach(item => {
         totalItems += item.qty;
     });
 
-    // 3. Update the HTML span element with the new number
     cartCountSpan.innerText = totalItems;
 }
 
@@ -140,9 +144,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loginNavBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Delete the user session AND empty their cart
+            // ONLY delete the current user session. 
+            // Do NOT delete the cart data, so it waits for them when they return!
             localStorage.removeItem('currentUser'); 
-            localStorage.removeItem('myCart'); 
             
             alert("You have been logged out.");
             window.location.reload(); 
@@ -254,28 +258,44 @@ function renderKeyboard(layoutValue) {
     updateLivePrice();
 }
 
-// 2. Handle Select All Button
-if (selectAllBtn) {
-    selectAllBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        allKeysData.forEach(k => k.element.classList.add('selected'));
-    });
-}
-
-// NEW: Dynamic UI for Color Pickers
-if (styleSelect && colorInputsContainer) {
-    styleSelect.addEventListener('change', () => {
-        let selectedName = styleSelect.options[styleSelect.selectedIndex].getAttribute('data-name');
+// 2. Add to Cart Logic (Builder Page)
+if(addToCartBtn) {
+    addToCartBtn.addEventListener('click', function() {
+        let layoutName = layoutSelect.options[layoutSelect.selectedIndex].getAttribute('data-name');
+        let switchName = switchSelect.options[switchSelect.selectedIndex].getAttribute('data-name');
         
-        if (selectedName === 'Custom Solid Color') {
-            colorInputsContainer.style.display = 'flex';
-            color2Input.style.display = 'none'; // Only need one color
-        } else if (selectedName === 'Custom Gradient Color') {
-            colorInputsContainer.style.display = 'flex';
-            color2Input.style.display = 'block'; // Need both colors
+        let totalKeycapPrice = 0;
+        let uniqueStyles = new Set(); 
+        
+        allKeysData.forEach(k => {
+            totalKeycapPrice += k.data.price;
+            uniqueStyles.add(k.data.styleName);
+        });
+
+        let finalPrice = parseInt(layoutSelect.value) + parseInt(switchSelect.value) + totalKeycapPrice;
+        let stylesSummary = Array.from(uniqueStyles).join(', ');
+        let buildDescription = `${layoutName} with ${switchName} switches. Custom Keycaps featuring: [${stylesSummary}].`;
+        
+        // --- UPDATED DYNAMIC CART CALL ---
+        let currentCartKey = getCartKey(); 
+        let cart = JSON.parse(localStorage.getItem(currentCartKey)) || [];
+        
+        let existingItemIndex = cart.findIndex(item => item.desc === buildDescription);
+        
+        if (existingItemIndex !== -1) {
+            cart[existingItemIndex].qty += 1;
         } else {
-            colorInputsContainer.style.display = 'none'; // Hide for designer sets
+            cart.push({ 
+                name: "Fully Custom Keyboard Build", 
+                desc: buildDescription,
+                price: finalPrice, 
+                qty: 1 
+            });
         }
+        
+        localStorage.setItem(currentCartKey, JSON.stringify(cart));
+        updateCartCount(); 
+        alert("Custom Build Added to Cart!");
     });
 }
 
@@ -426,62 +446,21 @@ if (layoutSelect && switchSelect) {
         }
 }
 
-// 5. Add to Cart Logic
-if(addToCartBtn) {
-    addToCartBtn.addEventListener('click', function() {
-        let layoutName = layoutSelect.options[layoutSelect.selectedIndex].getAttribute('data-name');
-        let switchName = switchSelect.options[switchSelect.selectedIndex].getAttribute('data-name');
-        
-        let totalKeycapPrice = 0;
-        let uniqueStyles = new Set(); // To list the styles used without repeating
-        
-        allKeysData.forEach(k => {
-            totalKeycapPrice += k.data.price;
-            uniqueStyles.add(k.data.styleName);
-        });
-
-        let finalPrice = parseInt(layoutSelect.value) + parseInt(switchSelect.value) + totalKeycapPrice;
-        
-        // Create a summary of the styles used (e.g., "Midnight Black ABS, Custom (#ff0000)")
-        let stylesSummary = Array.from(uniqueStyles).join(', ');
-
-        let buildDescription = `${layoutName} with ${switchName} switches. Custom Keycaps featuring: [${stylesSummary}].`;
-        
-        let cart = JSON.parse(localStorage.getItem('myCart')) || [];
-        let existingItemIndex = cart.findIndex(item => item.desc === buildDescription);
-        
-        if (existingItemIndex !== -1) {
-            cart[existingItemIndex].qty += 1;
-        } else {
-            cart.push({ 
-                name: "Fully Custom Keyboard Build", 
-                desc: buildDescription,
-                price: finalPrice, 
-                qty: 1 
-            });
-        }
-        
-        localStorage.setItem('myCart', JSON.stringify(cart));
-        updateCartCount(); 
-        alert("Custom Build Added to Cart!");
-    });
-}
-
 // --- CART PAGE LOGIC ---
 const cartContainer = document.getElementById('cart-items-container');
 const cartSummary = document.getElementById('cart-summary');
 const cartSubtotal = document.getElementById('cart-subtotal');
 
+// 3. Render Cart
 function renderCart() {
-    if(!cartContainer) return; // Only run if on cart page
+    if(!cartContainer) return; 
     
-    let cart = JSON.parse(localStorage.getItem('myCart')) || [];
+    let currentCartKey = getCartKey(); 
+    let cart = JSON.parse(localStorage.getItem(currentCartKey)) || [];
     
-    // Clear loading text
     cartContainer.innerHTML = "";
     
     if(cart.length === 0) {
-        // Updated empty cart message with clickable links
         cartContainer.innerHTML = `
             <p>Your cart is empty.</p>
             <p style="margin-top: 10px;">
@@ -496,11 +475,9 @@ function renderCart() {
     let totalRM = 0;
     cartSummary.style.display = "block";
     
-    // Loop through saved items and build HTML for each
     cart.forEach((item, index) => {
-        // --- NEW LOGIC: Multiply unit price by quantity ---
         let rowTotal = item.price * item.qty; 
-        totalRM += rowTotal; // Add to the grand total
+        totalRM += rowTotal; 
         
         let itemHTML = `
             <div class="cart-item">
@@ -518,13 +495,16 @@ function renderCart() {
     cartSubtotal.innerText = "RM " + totalRM;
 }
 
-// Function to remove an item (called by the button we just generated)
+// 4. Remove From Cart
 window.removeFromCart = function(index) {
-    let cart = JSON.parse(localStorage.getItem('myCart')) || [];
-    cart.splice(index, 1); // Remove the item at the specific index
-    localStorage.setItem('myCart', JSON.stringify(cart));
-    updateCartCount(); // Update global nav
-    renderCart(); // Refresh page display
+    let currentCartKey = getCartKey(); 
+    let cart = JSON.parse(localStorage.getItem(currentCartKey)) || [];
+    
+    cart.splice(index, 1); 
+    
+    localStorage.setItem(currentCartKey, JSON.stringify(cart));
+    updateCartCount(); 
+    renderCart(); 
 }
 
 // Run render cart if on cart page
@@ -538,11 +518,12 @@ const checkoutItemsContainer = document.getElementById('checkout-items-container
 const checkoutSubtotal = document.getElementById('checkout-subtotal');
 const checkoutGrandTotal = document.getElementById('checkout-grand-total');
 
-// 1. Render the Order Summary on load
+// 5A. Render Checkout Summary
 function renderCheckoutSummary() {
     if(!checkoutItemsContainer) return; 
     
-    let cart = JSON.parse(localStorage.getItem('myCart')) || [];
+    let currentCartKey = getCartKey(); 
+    let cart = JSON.parse(localStorage.getItem(currentCartKey)) || [];
     
     if(cart.length === 0) {
         checkoutItemsContainer.innerHTML = "<p style='color: #ff4444;'>Your cart is empty.</p>";
@@ -574,12 +555,13 @@ if(checkoutItemsContainer) {
     renderCheckoutSummary();
 }
 
-// 2. Handle the fake purchase
+// 5B. Handle Fake Purchase Submission
 if(checkoutForm) {
     checkoutForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Stop actual page reload/submission
+        event.preventDefault(); 
         
-        let cart = JSON.parse(localStorage.getItem('myCart')) || [];
+        let currentCartKey = getCartKey(); 
+        let cart = JSON.parse(localStorage.getItem(currentCartKey)) || [];
         
         if (cart.length === 0) {
             alert("Your cart is empty! Please add items before checking out.");
@@ -587,28 +569,12 @@ if(checkoutForm) {
             return;
         }
 
-        // Show the specific educational disclaimer
         alert("🎉 SUCCESSFUL PURCHASE!\n\nDISCLAIMER: This website is a prototype developed for educational purposes only. No actual transaction has occurred, no money was charged, and no products will be shipped.");
         
-        // Empty the cart
-        localStorage.removeItem('myCart');
+        // Empty only THIS specific user's cart
+        localStorage.removeItem(currentCartKey);
         
-        // Redirect back to home page
         window.location.href = "index.html";
-    });
-    
-    // Optional: Hide/Show card details based on payment method chosen
-    const paymentRadios = document.getElementsByName('payment-method');
-    const cardDetails = document.getElementById('card-details');
-    
-    paymentRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            if(e.target.value === 'card') {
-                cardDetails.style.display = 'block';
-            } else {
-                cardDetails.style.display = 'none';
-            }
-        });
     });
 }
 
