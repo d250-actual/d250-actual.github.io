@@ -139,7 +139,11 @@ document.addEventListener("DOMContentLoaded", () => {
         
         loginNavBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // Delete the user session AND empty their cart
             localStorage.removeItem('currentUser'); 
+            localStorage.removeItem('myCart'); 
+            
             alert("You have been logged out.");
             window.location.reload(); 
         });
