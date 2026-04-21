@@ -375,66 +375,49 @@ if (layoutSelect && switchSelect) {
     switchSelect.addEventListener('change', updateLivePrice);
 
     // Check if the user came from the Explore page with preset options
-        if (urlParams.has('layout') || urlParams.has('switch') || urlParams.has('keycap')) {
-            
-            // 1. Read the layout from the URL
-            if (urlParams.has('layout')) {
-                layoutSelect.value = urlParams.get('layout');
-            }
-            
-            // 2. THE FIX: Physically draw the board right now using that layout!
-            renderKeyboard(layoutSelect.value);
-            
-            // 3. Set the switches
-            if (urlParams.has('switch')) switchSelect.value = urlParams.get('switch');
-            
-            // 4. Handle the Keycap Colors
-            if (urlParams.has('keycap') && styleSelect) {
-                let presetKeycap = urlParams.get('keycap');
-                let matched = false;
-                
-                // Special handling for the Gradient demo
-                if (presetKeycap === '4' && urlParams.has('c1') && urlParams.has('c2')) {
-                    for (let i = 0; i < styleSelect.options.length; i++) {
-                        if (styleSelect.options[i].getAttribute('data-name') === 'Custom Gradient Color') {
-                            styleSelect.selectedIndex = i;
-                            matched = true;
-                            break;
-                        }
-                    }
-                    if (colorInputsContainer) colorInputsContainer.style.display = 'flex';
-                    if (color2Input) color2Input.style.display = 'block';
-                    color1Input.value = urlParams.get('c1');
-                    color2Input.value = urlParams.get('c2');
-                } else {
-                    let currentHref = window.location.href;
-                    for (let i = 0; i < styleSelect.options.length; i++) {
-                        let opt = styleSelect.options[i];
-                        if (opt.value === presetKeycap) {
-                            if (presetKeycap === '3' && currentHref.includes('Matcha') && opt.getAttribute('data-name').includes('Matcha')) {
-                                styleSelect.selectedIndex = i; matched = true; break;
-                            } else if (presetKeycap === '3' && currentHref.includes('Retro') && opt.getAttribute('data-name').includes('Retro')) {
-                                styleSelect.selectedIndex = i; matched = true; break;
-                            } else if (presetKeycap !== '3') {
-                                styleSelect.selectedIndex = i; matched = true; break;
-                            }
-                        }
-                    }
-                    if (!matched) styleSelect.value = presetKeycap; 
-                }
-
-                // Now that the board is drawn (thanks to our fix), the paint will actually stick!
-                setTimeout(() => {
-                    if (selectAllBtn && applyStyleBtn) {
-                        selectAllBtn.click();
-                        applyStyleBtn.click();
-                    }
-                }, 100); 
-            }
-        } else {
-            // If no URL parameters (user navigated here normally), draw default board
-            renderKeyboard(layoutSelect.value); 
+    if (urlParams.has('layout') || urlParams.has('switch') || urlParams.has('design')) {
+        
+        // 1. Read the layout from the URL and draw the board immediately
+        if (urlParams.has('layout')) {
+            layoutSelect.value = urlParams.get('layout');
         }
+        renderKeyboard(layoutSelect.value);
+        
+        // 2. Set the switches
+        if (urlParams.has('switch')) switchSelect.value = urlParams.get('switch');
+        
+        // 3. Handle the Keycaps using the EXACT name
+        if (urlParams.has('design') && styleSelect) {
+            let designName = urlParams.get('design');
+            
+            // Loop through the dropdown to find the perfect match
+            for (let i = 0; i < styleSelect.options.length; i++) {
+                if (styleSelect.options[i].getAttribute('data-name') === designName) {
+                    styleSelect.selectedIndex = i;
+                    break;
+                }
+            }
+
+            // Special setup if it's the Gradient demo
+            if (designName === 'Custom Gradient Color') {
+                if (colorInputsContainer) colorInputsContainer.style.display = 'flex';
+                if (color2Input) color2Input.style.display = 'block';
+                color1Input.value = urlParams.get('c1');
+                color2Input.value = urlParams.get('c2');
+            }
+
+            // Now that the dropdown is correctly set, programmatically paint the board
+            setTimeout(() => {
+                if (selectAllBtn && applyStyleBtn) {
+                    selectAllBtn.click();
+                    applyStyleBtn.click();
+                }
+            }, 100); 
+        }
+    } else {
+        // If no URL parameters (user navigated here normally), draw default board
+        renderKeyboard(layoutSelect.value); 
+    }
 }
 
 // --- CART PAGE LOGIC ---
