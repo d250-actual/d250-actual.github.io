@@ -5,7 +5,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Function to update the number shown in the navigation bar
 function updateCartCount() {
-    // 1. Get the cart array from local storage, or create an empty array if it doesn't exist
+    let cartCountSpan = document.getElementById('cart-count');
+    if (!cartCountSpan) return; // Safety check
+
+    let currentUser = localStorage.getItem('currentUser');
+    
+    // If no user is logged in, force the cart to show 0
+    if (!currentUser) {
+        cartCountSpan.innerText = "0";
+        return;
+    }
+
+    // 1. Get the cart array from local storage
     let cart = JSON.parse(localStorage.getItem('myCart')) || [];
     
     // 2. Find the total number of items
@@ -15,7 +26,7 @@ function updateCartCount() {
     });
 
     // 3. Update the HTML span element with the new number
-    document.getElementById('cart-count').innerText = totalItems;
+    cartCountSpan.innerText = totalItems;
 }
 
 // (Helper Function for Later) - You will use this on your builder.html page
